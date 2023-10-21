@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./ProductDetail.css";
+import Loading from "./Loading";
+
+import useProductService from "../hooks/useProductService";
 
 function ProductDetail() {
   const [product, setProduct] = useState(null);
   const { id } = useParams();
+  const { getProductById } = useProductService();
 
   useEffect(() => {
     axios
@@ -16,8 +20,11 @@ function ProductDetail() {
       .catch((error) => {
         console.error("Error fetching product data:", error);
       });
-    console.log(product);
   }, [id]);
+
+  /*   useEffect(() => {
+    getProductById(1);
+  }, []); */
 
   return (
     <div>
@@ -69,7 +76,7 @@ function ProductDetail() {
           </div>
         </div>
       ) : (
-        <p>Loading...</p>
+        <Loading />
       )}
     </div>
   );

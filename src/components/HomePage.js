@@ -1,39 +1,33 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import Card from "./Card";
+import useProductService from "../hooks/useProductService";
+import Loading from "./Loading";
 function HomePage() {
-  const [products, setProducts] = useState([]);
+  const { loading, products, error } = useProductService();
+  console.log(products);
 
-  useEffect(() => {
-    axios
-      .get("https://fakestoreapi.com/products")
-      .then((response) => {
-        setProducts(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-    console.log(products);
-  }, []);
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <div className="container">
       <h1>Product List</h1>
 
-      {products.length > 0 ? (
-        <div className="row">
-          {products.map((product) => (
-            <Card
-              title={product.title}
-              price={product.price}
-              image={product.image}
-              id={product.id}
-            />
-          ))}
-        </div>
-      ) : (
-        <h1>Loading</h1>
-      )}
+      <div className="row">
+        {products.map((product) => (
+          <Card
+            title={product.title}
+            price={product.price}
+            image={product.image}
+            id={product.id}
+          />
+        ))}
+      </div>
     </div>
   );
 }
